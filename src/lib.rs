@@ -94,6 +94,7 @@ impl FromStr for Server {
     }
 }
 
+#[cfg(any(feature = "packaged", feature = "fetched"))]
 pub(crate) fn parse_raw_server_list(text: &str) -> Result<Vec<Server>, InvalidFormat> {
     text.lines().map(|line| line.trim().parse()).collect()
 }
