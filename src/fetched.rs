@@ -39,7 +39,7 @@ pub enum Error {
 /// # Errors
 /// Fails when either the public server list cannot be fetched or is of invalid format.
 pub async fn list_servers() -> Result<Vec<Server>, Error> {
-    list_servers_with_caps(Capabilities::empty())
+    list_servers_with_capabilities(Capabilities::empty()).await
 }
 
 /// Load all known public stun servers that support the given capabilities.
