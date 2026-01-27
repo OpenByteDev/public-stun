@@ -1,0 +1,74 @@
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+env:
+  CARGO_TERM_COLOR: always
+  RUSTDOCFLAGS: "--deny warnings"
+  RUSTFLAGS: "--deny warnings"
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+    - uses: actions/checkout@v6
+    - name: Install latest stable
+      uses: dtolnay/rust-toolchain@stable
+    - name: Test
+      run: cargo test
+      
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v6
+    - name: Install latest stable
+      uses: dtolnay/rust-toolchain@stable
+    - name: Generate documentation
+      run: cargo doc --all-features
+
+  clippy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v6
+    - name: Install latest stable
+      uses: dtolnay/rust-toolchain@stable
+    - name: Clippy check
+      run: cargo clippy --all-features
+          
+  fmt:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v6
+    - name: Install latest stable
+      uses: dtolnay/rust-toolchain@stable
+    - name: Format check
+      run: cargo fmt --all -- --check
+
+  hack:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install latest nightly
+        uses: dtolnay/rust-toolchain@nightly
+      - name: cargo install cargo-hack
+        uses: taiki-e/install-action@cargo-hack
+      - name: cargo hack
+        run: cargo hack --feature-powerset check
+        
+  machete:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install latest nightly
+        uses: dtolnay/rust-toolchain@nightly
+      - name: cargo install cargo-machete
+        uses: taiki-e/install-action@cargo-machete
+      - run: cargo machete
