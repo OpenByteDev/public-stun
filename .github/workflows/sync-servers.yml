@@ -1,0 +1,55 @@
+name: Sync servers
+
+on:
+  schedule:
+    - cron: '0 6 1 * *' # monthly
+  workflow_dispatch:
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+    - uses: actions/checkout@v7
+
+    - name: Fetch latest server lists
+      shell: pwsh
+      run: ./update-packaged.ps1
+
+    - name: Check for changes
+      id: diff
+      run: git diff --quiet -- packaged || echo "changed=true" >> "$GITHUB_OUTPUT"
+
+    - name: Install latest stable
+      if: steps.diff.outputs.changed
+      uses: dtolnay/rust-toolchain@stable
+
+    # PRs opened with GITHUB_TOKEN don't trigger CI, so probe the new lists here.
+    - name: Probe updated servers
+      if: steps.diff.outputs.changed
+      run: cargo test --test connection -- --ignored --nocapture
+
+    - name: Install cargo-edit
+      if: steps.diff.outputs.changed
+      uses: taiki-e/cache-cargo-install-action@v3
+      with:
+        tool: cargo-edit
+
+    - name: Bump patch version
+      if: steps.diff.outputs.changed
+      run: cargo set-version --bump patch
+
+    - name: Create pull request
+      if: steps.diff.outputs.changed
+      uses: peter-evans/create-pull-request@v8
+      with:
+        commit-message: 'chore: Update packaged server list'
+        title: 'chore: Update packaged server list'
+        body: Automated update of `packaged/` from [pradt2/always-online-stun](https://github.com/pradt2/always-online-stun). Merging releases a new patch version.
+        branch: sync-servers
+        delete-branch: true
