@@ -44,12 +44,12 @@ mod tests {
     #[test]
     pub fn all() {
         let servers = list_servers();
-        assert!(!servers.is_empty());
+        assert_ne!(servers, [] as [Server; 0]);
     }
 
     #[test]
     pub fn any_for_nat_testing() {
         let servers = list_servers_with_capabilities(Capability::TcpSupport);
-        assert!(!servers.is_empty());
+        assert_ne!(servers, [] as [Server; 0]);
     }
 }

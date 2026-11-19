@@ -75,7 +75,7 @@ mod tests {
     #[tokio::test]
     pub async fn all() {
         let servers = list_servers().await.unwrap();
-        assert!(!servers.is_empty());
+        assert_ne!(servers, [] as [Server; 0]);
     }
 
     #[tokio::test]
@@ -83,6 +83,6 @@ mod tests {
         let servers = list_servers_with_capabilities(Capability::NatTesting)
             .await
             .unwrap();
-        assert!(!servers.is_empty());
+        assert_ne!(servers, [] as [Server; 0]);
     }
 }
