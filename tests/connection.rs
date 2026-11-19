@@ -92,11 +92,13 @@ async fn check_servers(caps: impl Into<Capabilities>) {
     );
 }
 
+#[ignore = "requires network access"]
 #[tokio::test]
 async fn all() {
     check_servers(Capabilities::empty()).await;
 }
 
+#[ignore = "requires network access"]
 #[tokio::test]
 async fn nat_testing() {
     check_servers(Capability::NatTesting).await;
