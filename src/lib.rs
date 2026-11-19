@@ -8,6 +8,7 @@
 //! Packaged servers:
 //! ```rust
 //! // The list is packaged with the crate and may be outdated.
+//! # #[cfg(feature = "packaged")]
 //! let servers = public_stun::packaged::list_servers();
 //! ```
 //!
