@@ -19,7 +19,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest]
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
     - name: Install latest stable
       uses: dtolnay/rust-toolchain@stable
     - name: Build
@@ -30,7 +30,7 @@ jobs:
   docs:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
     - name: Install latest stable
       uses: dtolnay/rust-toolchain@stable
     - name: Generate documentation
@@ -39,7 +39,7 @@ jobs:
   clippy:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
     - name: Install latest stable
       uses: dtolnay/rust-toolchain@stable
     - name: Clippy check
@@ -48,18 +48,20 @@ jobs:
   fmt:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
     - name: Install latest stable
       uses: dtolnay/rust-toolchain@stable
+      with:
+        components: rustfmt
     - name: Format check
       run: cargo fmt --all -- --check
 
   hack:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
       - name: Install latest nightly
         uses: dtolnay/rust-toolchain@nightly
+      - uses: actions/checkout@v7
       - name: cargo install cargo-hack
         uses: taiki-e/install-action@cargo-hack
       - name: cargo hack
@@ -68,9 +70,9 @@ jobs:
   machete:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
       - name: Install latest nightly
         uses: dtolnay/rust-toolchain@nightly
+      - uses: actions/checkout@v7
       - name: cargo install cargo-machete
         uses: taiki-e/install-action@cargo-machete
       - run: cargo machete
