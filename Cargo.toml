@@ -18,7 +18,8 @@ const_format = { version = "0.2", default-features = false, optional = true }
 reqwest = { version = "0.13", features = ["default-tls"], default-features = false, optional = true }
 
 [dev-dependencies]
-tokio = { version = "1.49", features = ["rt", "macros"], default-features = false }
+stun = { version = "0.17", default-features = false }
+tokio = { version = "1.49", features = ["rt", "macros", "net", "time", "sync"], default-features = false }
 
 [features]
 default = ["packaged"]
@@ -28,3 +29,7 @@ fetched = ["dep:reqwest", "dep:const_format"]
 [package.metadata.docs.rs]
 all-features = true
 rustdoc-args = ["--cfg", "docsrs"]
+
+[[example]]
+name = "public_ip"
+required-features = ["packaged"]
